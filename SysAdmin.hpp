@@ -11,34 +11,33 @@ using namespace std;
 
 /*
 	Parent components to use at the disposal of the database, command processor, and logger modules
-	-Michael
+	Work done by Michael
 */
 class TextMessenger {
 protected:
 	string fileName;
 	vector<string> content;
-	virtual void updateContent();
 	
 public:
 	TextMessenger(string);
+	virtual void updateContent();
+	vector<string> getContent();
 };
 
 class ReadMessenger : public TextMessenger {
-protected:
-	//reads data into content
-	void updateContent() override;
-
 public:
 	ReadMessenger(string);
+
+	//reads data into content
+	virtual void updateContent() override;
 };
 
 class WriteMessenger : public TextMessenger {
-protected:
-	//writes data out from content
-	void updateContent() override;
-
 public:
 	WriteMessenger(string);
+
+	//writes data out from content
+	virtual void updateContent() override;
 };
 
 #endif

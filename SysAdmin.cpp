@@ -6,6 +6,8 @@ TextMessenger::TextMessenger(string fileName) {
 
 void TextMessenger::updateContent() {}
 
+vector<string> TextMessenger::getContent() { return content; }
+
 ReadMessenger::ReadMessenger(string fileName) : TextMessenger(fileName) {}
 
 void ReadMessenger::updateContent() {

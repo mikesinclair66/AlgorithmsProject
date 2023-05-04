@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include "CommandProcessor.hpp"
 
 using namespace std;
 
@@ -7,10 +9,16 @@ using namespace std;
 */
 
 int main(int argc, char* argv[]) {
-	for (int i = 1; i < argc; i++)
-		cout << argv[i] << endl;
-
-	cout << "Hello, world!" << endl;
-
-	return 0;
+	if (argc == 4) {
+		string db = argv[1], cmd = argv[2], log = argv[3];
+		cout << "Reading " << cmd << endl;
+		CommandProcessor cp("../" + cmd);
+		cp.updateContent();
+		cp.printWords();
+		return 0;
+	}
+	else {
+		cerr << "The run file must be executed with three arguments: <database> <commands> <logger>" << endl;
+		return -1;
+	}
 }

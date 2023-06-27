@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include "CommandProcessor.hpp"
 
 using namespace std;
 
@@ -7,10 +9,45 @@ using namespace std;
 */
 
 int main(int argc, char* argv[]) {
-	for (int i = 1; i < argc; i++)
-		cout << argv[i] << endl;
+	if (argc == 4) {
+		string db = argv[1], cmd = argv[2], log = argv[3];
+		CommandProcessor cp("../" + cmd);
+		cp.updateContent();
 
-	cout << "Hello, world!" << endl;
+		for (Query query : cp.getQueries()) {
+			CommandType type = query.getCommandType();
+			vector<string> args = query.getArgs();
+			query.printWords();
 
-	return 0;
+			switch (query.getCommandType()) {
+				case CommandType::WORLD:
+
+					break;
+				case CommandType::IMPORT:
+
+					break;
+				case CommandType::QUIT:
+
+					break;
+				case CommandType::DEBUG:
+
+					break;
+				case CommandType::WHAT_IS_AT:
+
+					break;
+				case CommandType::WHAT_IS:
+
+					break;
+				case CommandType::WHAT_IS_IN:
+
+					break;
+			}
+		}
+
+		return 0;
+	}
+	else {
+		cerr << "The run file must be executed with three arguments: <database> <commands> <logger>" << endl;
+		return -1;
+	}
 }

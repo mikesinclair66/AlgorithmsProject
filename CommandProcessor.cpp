@@ -1,11 +1,12 @@
 #include "CommandProcessor.hpp"
 
 Query::Query(string line) {
+	//should have separate loop for the keyword enum and remaining args
 	string keyword = "";
 	for(char c : line)
 		if (c == '\t') {
-			if (!commandTypeProcessed) {
-				commandTypeProcessed = true;
+			if (!commandTypeAssigned) {
+				commandTypeAssigned = true;
 				processCommandType(keyword);
 			}
 			else
@@ -16,7 +17,7 @@ Query::Query(string line) {
 			keyword += c;
 
 	//if the command type has been processed, we can assume the last word is an argument
-	if (commandTypeProcessed)
+	if (commandTypeAssigned)
 		args.push_back(keyword);
 	else
 		processCommandType(keyword);
@@ -70,6 +71,14 @@ void Query::processCommandType(string keyword) {
 		type = CommandType::WHAT_IS_IN;
 }
 
+CommandType Query::getCommandType() {
+	return type;
+}
+
+vector<string> Query::getArgs() {
+	return args;
+}
+
 CommandProcessor::CommandProcessor(string fileName) : ReadMessenger(fileName) {}
 
 void CommandProcessor::updateContent() {
@@ -78,7 +87,6 @@ void CommandProcessor::updateContent() {
 		queries.push_back(Query(line));
 }
 
-void CommandProcessor::printWords() {
-	for (Query query : queries)
-		query.printWords();
+vector<Query> CommandProcessor::getQueries() {
+	return queries;
 }

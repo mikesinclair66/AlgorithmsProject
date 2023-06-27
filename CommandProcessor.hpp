@@ -23,7 +23,7 @@ enum class CommandType {
 
 //Query is for each line processed. It separates each key word and eliminates the tabs.
 class Query {
-	bool commandTypeProcessed = false;
+	bool commandTypeAssigned = false;
 	CommandType type;
 	vector<string> args;
 	void processCommandType(string);
@@ -31,6 +31,8 @@ class Query {
 public:
 	Query(string);
 	void printWords();
+	CommandType getCommandType();
+	vector<string> getArgs();
 };
 
 class CommandProcessor : public ReadMessenger {
@@ -39,7 +41,7 @@ class CommandProcessor : public ReadMessenger {
 public:
 	CommandProcessor(string);
 	void updateContent() override;
-	void printWords();
+	vector<Query> getQueries();
 };
 
 #endif

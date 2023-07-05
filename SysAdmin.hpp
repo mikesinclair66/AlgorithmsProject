@@ -10,7 +10,8 @@
 using namespace std;
 
 /*
-	Parent components to use at the disposal of the database, command processor, and logger modules
+	Parent components to use at the disposal of the database, command processor, and logger modules.
+	Serves as messenger from application to i/o through text files.
 	Work done by Michael
 */
 class TextMessenger {

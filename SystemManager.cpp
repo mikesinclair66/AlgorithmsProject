@@ -1,4 +1,4 @@
-#include "SysAdmin.hpp"
+#include "SystemManager.hpp"
 
 TextMessenger::TextMessenger(string fileName) {
 	this->fileName = fileName;

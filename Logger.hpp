@@ -2,7 +2,7 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
-#include "SysAdmin.hpp"
+#include "SystemManager.hpp"
 
 /*
 class Logger : public ReadMessenger {

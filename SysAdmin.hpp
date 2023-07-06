@@ -41,4 +41,11 @@ public:
 	virtual void updateContent() override;
 };
 
+struct DMS {
+	unsigned west, south;
+	unsigned long width, height;
+	DMS(string west, string east, string south, string north);
+		//: west(west), east(east), south(south), north(north) {}
+};
+
 #endif

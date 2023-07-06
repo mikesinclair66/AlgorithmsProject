@@ -84,9 +84,9 @@ CommandProcessor::CommandProcessor(string fileName) : ReadMessenger(fileName) {}
 void CommandProcessor::updateContent() {
 	ReadMessenger::updateContent();
 	for (string line : content)
-		queries.push_back(Query(line));
+		queries.push_back(line.at(0) == ';' ? nullptr : new Query(line));
 }
 
-vector<Query> CommandProcessor::getQueries() {
+vector<Query*> CommandProcessor::getQueries() {
 	return queries;
 }

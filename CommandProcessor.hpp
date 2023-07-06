@@ -36,12 +36,12 @@ public:
 };
 
 class CommandProcessor : public ReadMessenger {
-	vector<Query> queries;
+	vector<Query*> queries;
 
 public:
 	CommandProcessor(string);
 	void updateContent() override;
-	vector<Query> getQueries();
+	vector<Query*> getQueries();
 };
 
 #endif

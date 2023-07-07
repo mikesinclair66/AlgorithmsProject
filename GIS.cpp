@@ -2,12 +2,16 @@
 #include <string>
 #include "CommandProcessor.hpp"
 #include "Logger.hpp"
+#include "PRQuadTree.hpp"
 
 using namespace std;
+using namespace pr;
 
 /*
 	CMake project build process - Michael Sinclair
 */
+
+QuadTree tree;
 
 void computeWorldCommand(string west, string east, string south, string north);
 
@@ -57,5 +61,5 @@ int main(int argc, char* argv[]) {
 }
 
 void computeWorldCommand(string west, string east, string south, string north) {
-	DMS coords(west, east, south, north);
+	
 }

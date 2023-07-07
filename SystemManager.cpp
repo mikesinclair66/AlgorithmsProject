@@ -34,9 +34,3 @@ void WriteMessenger::updateContent() {
 
 	writer.close();
 }
-
-DMS::DMS(string west, string east, string south, string north)
-	: west(stoul(west.substr(0, west.length() - 1))), south(stoul(south.substr(0, south.length() - 1))) {
-	width = stoul(east.substr(0, east.length() - 1)) - this->west;
-	height = stoul(north.substr(0, north.length() - 1)) - this->south;
-}

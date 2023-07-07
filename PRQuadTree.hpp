@@ -2,16 +2,52 @@
 #ifndef PRQUAD_TREE_HPP
 #define PRQUAD_TREE_HPP
 
+#include <string>
+#include <stack>
+
+using namespace std;
+
+/*
+	Follows the implementation at https://www.youtube.com/watch?v=OELWhbqaUWQ
+	Work done by Michael
+*/
 namespace pr {
-	class Node {
-		Node* top, * left, * right;
+	struct DMS {
+		unsigned long lat, lon;
+		DMS(unsigned long lat, unsigned long lon);
+	};
+
+	class Region {
+		bool isSplit = false;
+		Region* parent, * sw, * nw, * se, * ne;
+		DMS* start, * end;
+
+		class Node {
+			Region* context;
+			DMS* coords;
+
+		public:
+			Node(Region* context, unsigned long lat, unsigned long lon);
+			Node(Node* copy);
+			Region* getContext();
+			DMS* getCoords();
+		};
+
+		Node* referenceNode = nullptr;
 
 	public:
-		Node();
+		Region();
+		Region(DMS* start, DMS* end);
+		void insertNode(unsigned long lat, unsigned long lon);
+		void setParent(Region*);
+		Region::Node* getReferenceNode();
 	};
 
 	class QuadTree {
-		Node top;
+		Region region;
+
+	public:
+		void insertNode(string latStr, string lonStr);
 	};
 }
 

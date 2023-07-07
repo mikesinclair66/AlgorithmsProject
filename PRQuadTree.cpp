@@ -27,8 +27,10 @@ void Region::insertNode(float lat, float lon) {
 	if (lat >= start->lat && lat < end->lat
 		&& lon >= start->lon && lon < end->lon) {
 		if (!isSplit) {
-			if (internalNode == nullptr)
+			if (internalNode == nullptr) {
 				internalNode = new Node(lat, lon);
+				internalNode->setContext(this);
+			}
 			else {
 				DMS halfDist((end->lat - start->lat) / 2.f, (end->lon - start->lon) / 2.f),
 					halfNE(start->lat + halfDist.lat, start->lon + halfDist.lon);

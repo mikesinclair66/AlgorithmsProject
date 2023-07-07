@@ -13,7 +13,7 @@ using namespace pr;
 
 QuadTree tree;
 
-void computeWorldCommand(string west, string east, string south, string north);
+void computeWorldCommand(string north, string east, string south, string west);
 
 int main(int argc, char* argv[]) {
 	if (argc == 4) {
@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 
 				switch (query->getCommandType()) {
 				case CommandType::WORLD:
-					computeWorldCommand(args[0], args[1], args[2], args[3]);
+					computeWorldCommand(args[3], args[1], args[2], args[0]);
 					break;
 				case CommandType::IMPORT:
 
@@ -60,6 +60,11 @@ int main(int argc, char* argv[]) {
 	}
 }
 
-void computeWorldCommand(string west, string east, string south, string north) {
-	
+void computeWorldCommand(string north, string east, string south, string west) {
+	tree.defineRegion(
+		stoul(north.substr(0, north.length() - 1)),
+		stoul(east.substr(0, east.length() - 1)),
+		stoul(south.substr(0, south.length() - 1)),
+		stoul(west.substr(0, west.length() - 1))
+	);
 }

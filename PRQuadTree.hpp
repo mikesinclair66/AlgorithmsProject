@@ -3,8 +3,9 @@
 #define PRQUAD_TREE_HPP
 
 #include <string>
-#include <stack>
+#include <vector>
 #include <exception>
+#include <math.h>
 
 using namespace std;
 
@@ -14,43 +15,48 @@ using namespace std;
 */
 namespace pr {
 	struct DMS {
-		unsigned long lat, lon;
-		DMS(unsigned long lat, unsigned long lon);
+		float lat, lon;
+		DMS(float lat, float lon);
+		DMS(DMS* copy);
 	};
 
 	class Region {
 		bool isSplit = false;
-		Region* parent, * sw, * nw, * se, * ne;
+		vector<Region> subregions;//ne, se, sw, nw
 		DMS* start, * end;
+		void testSubregionForInsert(float lat, float lon);
 
 		class Node {
-			Region* context;
+			Region* context = nullptr;
 			DMS* coords;
 
 		public:
-			Node(Region* context, unsigned long lat, unsigned long lon);
+			Node(float lat, float lon);
 			Node(Node* copy);
+			~Node();
+			void setContext(Region* context);
 			Region* getContext();
 			DMS* getCoords();
 		};
 
-		Node* referenceNode = nullptr;
+		Node* internalNode = nullptr;
 
 	public:
-		Region();
 		Region(DMS* start, DMS* end);
-		void insertNode(unsigned long lat, unsigned long lon);
-		void setParent(Region*);
-		//DMS* getStartCoords();
+		~Region();
+		void insertNode(float lat, float lon);
+		DMS* getStartCoords();
 		DMS* getEndCoords();
-		Region::Node* getReferenceNode();
 	};
 
 	class QuadTree {
-		Region region;
+		Region* region;
+		float getSmallValue(int largeValue);
 
 	public:
-		void insertNode(string latStr, string lonStr);
+		~QuadTree();
+		void defineRegion(int north, int east, int south, int west);
+		void insertNode(int lat, int lon);
 	};
 }
 

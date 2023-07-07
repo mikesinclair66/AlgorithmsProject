@@ -2,13 +2,14 @@
 
 using namespace pr;
 
-DMS::DMS(unsigned long lat, unsigned long lon) {
+DMS::DMS(float lat, float lon) {
 	this->lat = lat;
 	this->lon = lon;
 }
 
-Region::Region() {
-	parent = nullptr;
+DMS::DMS(DMS* copy) {
+	lat = copy->lat;
+	lon = copy->lon;
 }
 
 Region::Region(DMS* start, DMS* end) {
@@ -16,85 +17,65 @@ Region::Region(DMS* start, DMS* end) {
 	this->end = end;
 }
 
-void Region::insertNode(unsigned long lat, unsigned long lon) {
-	if (referenceNode == nullptr)
-		referenceNode = new Node(this, lat, lon);
-	else if(!isSplit) {
-		Node n1 = Node(referenceNode), n2(this, lat, lon);
-		referenceNode = nullptr;
+Region::~Region() {
+	delete start;
+	delete end;
+	delete internalNode;
+}
 
-		unsigned long north, east, west, south;
-		if (n1.getCoords()->lon >= n2.getCoords()->lon) {
-			north = n1.getCoords()->lon;
-			south = n2.getCoords()->lon;
-		}
-		else {
-			north = n2.getCoords()->lon;
-			south = n1.getCoords()->lon;
-		}
-		if (n1.getCoords()->lat >= n2.getCoords()->lat) {
-			east = n1.getCoords()->lat;
-			west = n2.getCoords()->lat;
-		}
-		else {
-			east = n2.getCoords()->lat;
-			west = n1.getCoords()->lat;
-		}
+void Region::insertNode(float lat, float lon) {
+	if (lat >= start->lat && lat < end->lat
+		&& lon >= start->lon && lon < end->lon) {
+		if (!isSplit) {
+			if (internalNode == nullptr)
+				internalNode = new Node(lat, lon);
+			else {
+				DMS halfDist((end->lat - start->lat) / 2.f, (end->lon - start->lon) / 2.f),
+					halfNE(start->lat + halfDist.lat, start->lon + halfDist.lon);
 
-		start = new DMS(west, south);
-		end = new DMS(east, north);
+				subregions.push_back(Region(new DMS(halfNE), end));//ne
+				subregions.push_back(Region(new DMS(halfNE.lat, start->lon), new DMS(end->lat, halfNE.lon)));//se
+				subregions.push_back(Region(start, new DMS(halfNE)));//sw
+				subregions.push_back(Region(new DMS(start->lat, halfNE.lon), new DMS(halfNE.lat, end->lon)));//nw
 
-		DMS halfDist((east - west) / 2ul, (north - south) / 2ul);
-		sw = new Region(start, new DMS(west + halfDist.lat, south + halfDist.lon));
-		nw = new Region(new DMS(west, south + halfDist.lon), new DMS(west + halfDist.lat, north));
-		se = new Region(new DMS(west + halfDist.lat, south), new DMS(east, south + halfDist.lon));
-		ne = new Region(new DMS(west + halfDist.lon, south + halfDist.lon), end);
-		sw->setParent(this);
-		nw->setParent(this);
-		se->setParent(this);
-		ne->setParent(this);
+				Node nodesInComparison[2] = {
+					Node(internalNode),
+					Node(lat, lon)
+				};
+				internalNode = nullptr;
+				for (int n = 0; n < 2; n++) {
+					DMS* nCoords = nodesInComparison[n].getCoords();
+					testSubregionForInsert(nCoords->lat, nCoords->lon);
+				}
 
-		isSplit = true;
-	}
-	else {
-		if (lat >= start->lat && lat < end->lat
-			&& lon >= start->lon && lon < end->lon) {
-			auto getWesternRegion = [](unsigned int lat, unsigned int lon, Region* nw, Region* sw) {
-				return (lon >= nw->getEndCoords()->lon) ? sw : nw;
-			};
-			auto getEasternRegion = [](unsigned int lat, unsigned int lon, Region* ne, Region* se) {
-				return (lon >= ne->getEndCoords()->lon) ? se : ne;
-			};
-
-			if (lat >= nw->getEndCoords()->lat)
-				getWesternRegion(lat, lon, nw, sw)->insertNode(lat, lon);
-			else
-				getEasternRegion(lat, lon, ne, se)->insertNode(lat, lon);
+				isSplit = true;
+			}
 		}
 		else
-			throw exception("Node reached the wrong boundary");
+			testSubregionForInsert(lat, lon);
 	}
 }
 
-void Region::setParent(Region* parent) {
-	this->parent = parent;
-}
-
-/*
 DMS* Region::getStartCoords() {
 	return start;
 }
-*/
 
 DMS* Region::getEndCoords() {
 	return end;
 }
 
-Region::Node* Region::getReferenceNode() {
-	return referenceNode;
+void Region::testSubregionForInsert(float lat, float lon) {
+	for (int i = 0; i < 4; i++) {
+		DMS* startCoords = subregions[i].getStartCoords(), * endCoords = subregions[i].getEndCoords();
+		if (lat >= startCoords->lat && lat < endCoords->lat
+			&& lon >= startCoords->lon && lon < endCoords->lon) {
+			subregions[i].insertNode(lat, lon);
+			break;
+		}
+	}
 }
 
-Region::Node::Node(Region* context, unsigned long lat, unsigned long lon) {
+Region::Node::Node(float lat, float lon) {
 	this->context = context;
 	coords = new DMS(lat, lon);
 }
@@ -102,6 +83,15 @@ Region::Node::Node(Region* context, unsigned long lat, unsigned long lon) {
 Region::Node::Node(Node* copy) {
 	context = copy->getContext();
 	coords = copy->getCoords();
+}
+
+Region::Node::~Node() {
+	delete context;
+	delete coords;
+}
+
+void Region::Node::setContext(Region* context) {
+	this->context = context;
 }
 
 Region* Region::Node::getContext() {
@@ -112,9 +102,19 @@ DMS* Region::Node::getCoords() {
 	return coords;
 }
 
-void QuadTree::insertNode(string latStr, string lonStr) {
-	region.insertNode(
-		stoul(latStr.substr(0, latStr.size() - 1)),
-		stoul(lonStr.substr(0, lonStr.size() - 1))
-	);
+QuadTree::~QuadTree() {
+	delete region;
+}
+
+float QuadTree::getSmallValue(int largeValue) {
+	return sqrt(largeValue);
+}
+
+void QuadTree::defineRegion(int north, int east, int south, int west) {
+	region = new Region(new DMS(getSmallValue(west), getSmallValue(south)),
+		new DMS(getSmallValue(east), getSmallValue(north)));
+}
+
+void QuadTree::insertNode(int lat, int lon) {
+	region->insertNode(getSmallValue(lat), getSmallValue(lon));
 }

@@ -41,11 +41,14 @@ void Region::insertNode(unsigned long lat, unsigned long lon) {
 			west = n1.getCoords()->lat;
 		}
 
+		start = new DMS(west, south);
+		end = new DMS(east, north);
+
 		DMS halfDist((east - west) / 2ul, (north - south) / 2ul);
-		sw = new Region(new DMS(west, south), new DMS(west + halfDist.lat, south + halfDist.lon));
+		sw = new Region(start, new DMS(west + halfDist.lat, south + halfDist.lon));
 		nw = new Region(new DMS(west, south + halfDist.lon), new DMS(west + halfDist.lat, north));
 		se = new Region(new DMS(west + halfDist.lat, south), new DMS(east, south + halfDist.lon));
-		ne = new Region(new DMS(west + halfDist.lon, south + halfDist.lon), new DMS(east, north));
+		ne = new Region(new DMS(west + halfDist.lon, south + halfDist.lon), end);
 		sw->setParent(this);
 		nw->setParent(this);
 		se->setParent(this);
@@ -54,13 +57,37 @@ void Region::insertNode(unsigned long lat, unsigned long lon) {
 		isSplit = true;
 	}
 	else {
-		bool isEast = false, isNorth = false;
+		if (lat >= start->lat && lat < end->lat
+			&& lon >= start->lon && lon < end->lon) {
+			auto getWesternRegion = [](unsigned int lat, unsigned int lon, Region* nw, Region* sw) {
+				return (lon >= nw->getEndCoords()->lon) ? sw : nw;
+			};
+			auto getEasternRegion = [](unsigned int lat, unsigned int lon, Region* ne, Region* se) {
+				return (lon >= ne->getEndCoords()->lon) ? se : ne;
+			};
 
+			if (lat >= nw->getEndCoords()->lat)
+				getWesternRegion(lat, lon, nw, sw)->insertNode(lat, lon);
+			else
+				getEasternRegion(lat, lon, ne, se)->insertNode(lat, lon);
+		}
+		else
+			throw exception("Node reached the wrong boundary");
 	}
 }
 
 void Region::setParent(Region* parent) {
 	this->parent = parent;
+}
+
+/*
+DMS* Region::getStartCoords() {
+	return start;
+}
+*/
+
+DMS* Region::getEndCoords() {
+	return end;
 }
 
 Region::Node* Region::getReferenceNode() {

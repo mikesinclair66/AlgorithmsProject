@@ -4,6 +4,7 @@
 
 #include <string>
 #include <stack>
+#include <exception>
 
 using namespace std;
 
@@ -40,6 +41,8 @@ namespace pr {
 		Region(DMS* start, DMS* end);
 		void insertNode(unsigned long lat, unsigned long lon);
 		void setParent(Region*);
+		//DMS* getStartCoords();
+		DMS* getEndCoords();
 		Region::Node* getReferenceNode();
 	};
 

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
+#include "SystemManager.hpp"
 #include "CommandProcessor.hpp"
-#include "Logger.hpp"
 #include "PRQuadTree.hpp"
 
 using namespace std;
@@ -21,11 +21,12 @@ int main(int argc, char* argv[]) {
 		CommandProcessor cp("../" + cmd);
 		cp.updateContent();
 
+		WriteMessenger logger("../" + log);
+
 		for (Query* query : cp.getQueries())
 			if (query != nullptr) {
 				CommandType type = query->getCommandType();
 				vector<string> args = query->getArgs();
-				query->printWords();
 
 				switch (query->getCommandType()) {
 				case CommandType::WORLD:
@@ -49,8 +50,13 @@ int main(int argc, char* argv[]) {
 				case CommandType::WHAT_IS_IN:
 
 					break;
+				case CommandType::COMMENT:
+					logger.println(query->getArgs()[0]);
+					break;
 				}
 			}
+
+		logger.updateContent();
 
 		return 0;
 	}
@@ -62,9 +68,9 @@ int main(int argc, char* argv[]) {
 
 void computeWorldCommand(string north, string east, string south, string west) {
 	tree.defineRegion(
-		stoul(north.substr(0, north.length() - 1)),
-		stoul(east.substr(0, east.length() - 1)),
-		stoul(south.substr(0, south.length() - 1)),
-		stoul(west.substr(0, west.length() - 1))
+		stoi(north.substr(0, north.length() - 1)),
+		stoi(east.substr(0, east.length() - 1)),
+		stoi(south.substr(0, south.length() - 1)),
+		stoi(west.substr(0, west.length() - 1))
 	);
 }

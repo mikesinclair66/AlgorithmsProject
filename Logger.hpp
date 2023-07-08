@@ -4,11 +4,9 @@
 
 #include "SystemManager.hpp"
 
-/*
 class Logger : public ReadMessenger {
 public:
 	Logger(string);
 };
-*/
 
 #endif

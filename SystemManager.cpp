@@ -34,3 +34,7 @@ void WriteMessenger::updateContent() {
 
 	writer.close();
 }
+
+void WriteMessenger::println(string line) {
+	content.push_back(line);
+}

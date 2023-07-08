@@ -1,6 +1,12 @@
 #include "CommandProcessor.hpp"
 
 Query::Query(string line) {
+	if (line.at(0) == ';') {
+		type = CommandType::COMMENT;
+		args.push_back(line);
+		return;
+	}
+
 	//should have separate loop for the keyword enum and remaining args
 	string keyword = "";
 	for(char c : line)
@@ -21,37 +27,6 @@ Query::Query(string line) {
 		args.push_back(keyword);
 	else
 		processCommandType(keyword);
-}
-
-void Query::printWords() {
-	string line = "";
-	switch (type) {
-	case CommandType::WORLD:
-		line = "world";
-		break;
-	case CommandType::IMPORT:
-		line = "import";
-		break;
-	case CommandType::QUIT:
-		line = "quit";
-		break;
-	case CommandType::DEBUG:
-		line = "debug";
-		break;
-	case CommandType::WHAT_IS_AT:
-		line = "what_is_at";
-		break;
-	case CommandType::WHAT_IS:
-		line = "what_is";
-		break;
-	case CommandType::WHAT_IS_IN:
-		line = "what_is_in";
-		break;
-	}
-
-	for (string word : args)
-		line += " " + word;
-	cout << line << endl;
 }
 
 void Query::processCommandType(string keyword) {
@@ -83,8 +58,10 @@ CommandProcessor::CommandProcessor(string fileName) : ReadMessenger(fileName) {}
 
 void CommandProcessor::updateContent() {
 	ReadMessenger::updateContent();
-	for (string line : content)
-		queries.push_back(line.at(0) == ';' ? nullptr : new Query(line));
+	for (string line : content) {
+		if(line.at(0) != '\n' && line.at(0) != ';')
+			queries.push_back(new Query(line));
+	}
 }
 
 vector<Query*> CommandProcessor::getQueries() {

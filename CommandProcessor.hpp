@@ -18,7 +18,8 @@ enum class CommandType {
 	DEBUG,
 	WHAT_IS_AT,
 	WHAT_IS,
-	WHAT_IS_IN
+	WHAT_IS_IN,
+	COMMENT
 };
 
 //Query is for each line processed. It separates each key word and eliminates the tabs.
@@ -26,11 +27,10 @@ class Query {
 	bool commandTypeAssigned = false;
 	CommandType type;
 	vector<string> args;
-	void processCommandType(string);
+	void processCommandType(string keyword);
 
 public:
 	Query(string);
-	void printWords();
 	CommandType getCommandType();
 	vector<string> getArgs();
 };

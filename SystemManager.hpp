@@ -39,6 +39,7 @@ public:
 
 	//writes data out from content
 	virtual void updateContent() override;
+	void println(string line);
 };
 
 #endif

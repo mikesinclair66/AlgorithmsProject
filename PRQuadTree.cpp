@@ -109,7 +109,7 @@ QuadTree::~QuadTree() {
 }
 
 float QuadTree::getSmallValue(int largeValue) {
-	return sqrt(largeValue);
+	return sqrt((float)largeValue);
 }
 
 void QuadTree::defineRegion(int north, int east, int south, int west) {

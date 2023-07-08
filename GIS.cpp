@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 
 					break;
 				case CommandType::QUIT:
-
+					return;
 					break;
 				case CommandType::DEBUG:
 

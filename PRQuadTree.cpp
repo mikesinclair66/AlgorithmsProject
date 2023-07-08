@@ -2,16 +2,6 @@
 
 using namespace pr;
 
-DMS::DMS(float lat, float lon) {
-	this->lat = lat;
-	this->lon = lon;
-}
-
-DMS::DMS(DMS* copy) {
-	lat = copy->lat;
-	lon = copy->lon;
-}
-
 Region::Region(DMS* start, DMS* end) {
 	this->start = start;
 	this->end = end;

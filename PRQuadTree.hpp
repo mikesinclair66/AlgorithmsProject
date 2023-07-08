@@ -6,6 +6,7 @@
 #include <vector>
 #include <exception>
 #include <math.h>
+#include "DMS.hpp"
 
 using namespace std;
 
@@ -14,12 +15,6 @@ using namespace std;
 	Work done by Michael
 */
 namespace pr {
-	struct DMS {
-		float lat, lon;
-		DMS(float lat, float lon);
-		DMS(DMS* copy);
-	};
-
 	class Region {
 		bool isSplit = false;
 		vector<Region> subregions;//ne, se, sw, nw

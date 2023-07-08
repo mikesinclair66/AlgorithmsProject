@@ -1,0 +1,55 @@
+Course project for COMP 8042
+Student participants: (Michael Sinclair, A01050793), Nam
+Beginning of GIS program log:
+database: database.txt, commands: commands.txt, log: log.txt
+Program ran at Sat Jul  8 11:42:23 2023
+
+; Script 1
+;
+; Testing using a small dataset
+;
+; Specify boundaries of coordinate space:
+;
+-----------------------------------------------------------------------
+World boundaries are set to:
+	383000
+    -794530	-792630
+	381000
+-----------------------------------------------------------------------
+;
+; Import the dataset [the address here is a relative address]
+Imported ./VA_Monterey.txt into local storage.
+;
+; Lets visualize our already imported geographical data
+;
+; Also lets see what is inside name and coordinate indices
+;
+; To fill out the cache, let's do a single-match location search
+;
+; Now lets see if our cache is filled up
+;
+; A few more search queries
+; oops Church is "FEATURE_CLASS" how about the following query?
+; Let's try a wrong state abbreviation
+;
+; Lets check the buffer pool again
+;
+; So lets check the LRU mechanism [this query should move the last element of the cache all the way to the front!]
+;
+; checking the buffer pool again
+;
+; More location searches
+; We expect two location matches for this one
+;
+; Now performing some area search [this should return 7 features]
+;
+; checking the buffer pool again
+; how about querying somewhere outside boundaries ?
+; Let's try some variations of a single-match region search with a square region:
+; Let's try increasing the size of the region:
+;
+; Let's import a larger dataset [wait a second, VA_Bath has 520 records, why didn't all of them get imported? explain this in your report]
+Imported ./VA_Bath.txt into local storage.
+; as import command bypasses the buffer pool, content of the buffer pool should remain intact
+;
+; Exiting

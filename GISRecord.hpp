@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 enum GISFields {
 	FEATURE_ID,
 	FEATURE_NAME,

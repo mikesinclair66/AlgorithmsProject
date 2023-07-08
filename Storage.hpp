@@ -5,7 +5,8 @@
 #include "SystemManager.hpp"
 
 class Storage : public WriteMessenger {
-
+public:
+	Storage(string);
 };
 
 #endif

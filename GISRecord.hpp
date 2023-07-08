@@ -8,8 +8,7 @@
 using namespace std;
 
 class GISRecord {
-	const string FEATURE_NAME, STATE;
-	DMS* coords;
+
 };
 
 #endif

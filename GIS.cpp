@@ -3,6 +3,7 @@
 #include "SystemManager.hpp"
 #include "CommandProcessor.hpp"
 #include "PRQuadTree.hpp"
+#include "Storage.hpp"
 
 using namespace std;
 using namespace pr;
@@ -22,6 +23,8 @@ int main(int argc, char* argv[]) {
 		cp.updateContent();
 
 		WriteMessenger logger("../" + log);
+		ReadMessenger* fileImporter;
+		Storage storage("../" + db);
 
 		for (Query* query : cp.getQueries())
 			if (query != nullptr) {
@@ -33,7 +36,12 @@ int main(int argc, char* argv[]) {
 					computeWorldCommand(args[3], args[1], args[2], args[0]);
 					break;
 				case CommandType::IMPORT:
+					fileImporter = new ReadMessenger(args[0]);
+					fileImporter->updateContent();
 
+					for (int i = 1; i < fileImporter->getContent().size(); i++)
+						storage.println(fileImporter->getContent()[i]);
+					storage.updateContent();
 					break;
 				case CommandType::QUIT:
 					return;

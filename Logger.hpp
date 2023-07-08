@@ -12,7 +12,6 @@ public:
 	void log(string text);
 	void logCmdLineNum(string text);
 private:
-	// keep file open since we most likely will write into it often
 	fstream file;
 	int lineNum;
 };

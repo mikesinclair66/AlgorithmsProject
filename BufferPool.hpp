@@ -13,12 +13,7 @@ public:
 	list<pair<GISRecord, int>>::iterator sortRecord(list<pair<GISRecord, int>>::iterator matchIter);
 	string toStr();
 private:
-	// max size of the buffer
 	size_t maxSize;
-
-	// store the record and how often it was used
-	// we will keep it sorted so the first element is always
-	// the most recently used.
 	list<pair<GISRecord, int>> pool;
 };
 

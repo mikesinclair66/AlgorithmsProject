@@ -1,0 +1,3 @@
+Defined world space at (N=383000N, E=0792630W, S=381000N, W=0794530W)
+Imported ./VA_Monterey.txt into local storage.
+Imported ./VA_Bath.txt into local storage.

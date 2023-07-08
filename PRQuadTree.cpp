@@ -10,16 +10,21 @@ Region::Region(DMS* start, DMS* end) {
 Region::~Region() {
 	delete start;
 	delete end;
-	delete internalNode;
+	for (int i = 0; i < bucket.size(); i++) {
+		Node* t = bucket.top();
+		bucket.pop();
+		delete t;
+	}
 }
 
 void Region::insertNode(float lat, float lon) {
 	if (lat >= start->lat && lat < end->lat
 		&& lon >= start->lon && lon < end->lon) {
 		if (!isSplit) {
-			if (internalNode == nullptr) {
-				internalNode = new Node(lat, lon);
-				internalNode->setContext(this);
+			if (bucket.size() < BUCKET_SIZE) {
+				Node* node = new Node(lat, lon);
+				node->setContext(this);
+				bucket.push(node);
 			}
 			else {
 				DMS halfDist((end->lat - start->lat) / 2.f, (end->lon - start->lon) / 2.f),
@@ -30,13 +35,15 @@ void Region::insertNode(float lat, float lon) {
 				subregions.push_back(Region(start, new DMS(halfNE)));//sw
 				subregions.push_back(Region(new DMS(start->lat, halfNE.lon), new DMS(halfNE.lat, end->lon)));//nw
 
-				Node nodesInComparison[2] = {
-					Node(internalNode),
-					Node(lat, lon)
-				};
-				internalNode = nullptr;
-				for (int n = 0; n < 2; n++) {
-					DMS* nCoords = nodesInComparison[n].getCoords();
+				vector<Node*> nodesInComparison;
+				for (int i = 0; i < BUCKET_SIZE; i++) {
+					nodesInComparison.push_back(bucket.top());
+					bucket.pop();
+				}
+				nodesInComparison.push_back(new Node(lat, lon));
+
+				for (int n = 0; n < nodesInComparison.size(); n++) {
+					DMS* nCoords = nodesInComparison[n]->getCoords();
 					testSubregionForInsert(nCoords->lat, nCoords->lon);
 				}
 

@@ -2,8 +2,9 @@
 #ifndef PRQUAD_TREE_HPP
 #define PRQUAD_TREE_HPP
 
-#include <string>
 #include <vector>
+#include <stack>
+#include <string>
 #include <exception>
 #include <math.h>
 #include "DMS.hpp"
@@ -34,7 +35,8 @@ namespace pr {
 			DMS* getCoords();
 		};
 
-		Node* internalNode = nullptr;
+		stack<Node*> bucket;
+		inline static const int BUCKET_SIZE = 4;
 
 	public:
 		Region(DMS* start, DMS* end);

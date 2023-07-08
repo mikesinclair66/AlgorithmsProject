@@ -34,14 +34,19 @@ int main(int argc, char* argv[]) {
 				switch (query->getCommandType()) {
 				case CommandType::WORLD:
 					computeWorldCommand(args[3], args[1], args[2], args[0]);
+					logger.println("Defined world space at (N=" + args[3] + ", E=" + args[1]
+						+ ", S=" + args[2] + ", W=" + args[0] + ")");
+					logger.updateContent();
 					break;
 				case CommandType::IMPORT:
-					fileImporter = new ReadMessenger(args[0]);
+					fileImporter = new ReadMessenger("../" + args[0]);
 					fileImporter->updateContent();
 
 					for (int i = 1; i < fileImporter->getContent().size(); i++)
 						storage.println(fileImporter->getContent()[i]);
 					storage.updateContent();
+					logger.println("Imported " + args[0] + " into local storage.");
+					logger.updateContent();
 					break;
 				case CommandType::QUIT:
 					return 0;
@@ -63,8 +68,6 @@ int main(int argc, char* argv[]) {
 					break;
 				}
 			}
-
-		logger.updateContent();
 
 		return 0;
 	}

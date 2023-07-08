@@ -4,9 +4,12 @@
 
 #include "SystemManager.hpp"
 
-class Logger : public ReadMessenger {
+class Logger : public WriteMessenger {
 public:
-	Logger(string);
+	Logger(string path);
+	string getLineBreak();
+	void queueLines(vector<string> lines);
+	void println(string line) override;
 };
 
 #endif

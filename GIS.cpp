@@ -1,9 +1,12 @@
 #include <iostream>
 #include <string>
+#include <chrono>
+#include <ctime>
 #include "SystemManager.hpp"
 #include "CommandProcessor.hpp"
 #include "PRQuadTree.hpp"
 #include "Storage.hpp"
+#include "Logger.hpp"
 
 using namespace std;
 using namespace pr;
@@ -14,7 +17,8 @@ using namespace pr;
 
 QuadTree tree;
 
-void computeWorldCommand(string north, string east, string south, string west);
+void computeWorldCommand(string north, string east, string south, string west, Logger& logger);
+string getSystemTime();
 
 int main(int argc, char* argv[]) {
 	if (argc == 4) {
@@ -22,7 +26,15 @@ int main(int argc, char* argv[]) {
 		CommandProcessor cp("../" + cmd);
 		cp.updateContent();
 
-		WriteMessenger logger("../" + log);
+		Logger logger("../" + log);
+		logger.queueLines(vector<string> {
+			"Course project for COMP 8042",
+			"Student participants: (Michael Sinclair, A01050793), Nam",
+			"Beginning of GIS program log:",
+			"database: " + db + ", commands: " + cmd + ", log: " + log,
+			"Program ran at " + getSystemTime()
+		});
+
 		ReadMessenger* fileImporter;
 		Storage storage("../" + db);
 
@@ -33,10 +45,7 @@ int main(int argc, char* argv[]) {
 
 				switch (query->getCommandType()) {
 				case CommandType::WORLD:
-					computeWorldCommand(args[3], args[1], args[2], args[0]);
-					logger.println("Defined world space at (N=" + args[3] + ", E=" + args[1]
-						+ ", S=" + args[2] + ", W=" + args[0] + ")");
-					logger.updateContent();
+					computeWorldCommand(args[3], args[1], args[2], args[0], logger);
 					break;
 				case CommandType::IMPORT:
 					fileImporter = new ReadMessenger("../" + args[0]);
@@ -69,6 +78,9 @@ int main(int argc, char* argv[]) {
 				}
 			}
 
+		logger.println("Program run at " + getSystemTime());
+		logger.updateContent();
+
 		return 0;
 	}
 	else {
@@ -77,11 +89,26 @@ int main(int argc, char* argv[]) {
 	}
 }
 
-void computeWorldCommand(string north, string east, string south, string west) {
-	tree.defineRegion(
-		stoi(north.substr(0, north.length() - 1)),
-		stoi(east.substr(0, east.length() - 1)),
-		stoi(south.substr(0, south.length() - 1)),
-		stoi(west.substr(0, west.length() - 1))
-	);
+void computeWorldCommand(string north, string east, string south, string west, Logger& logger) {
+	signed int northI, eastI, southI, westI;
+	northI = stoi(north.substr(0, north.length()));
+	eastI = stoi(east.substr(0, east.length()));
+	southI = stoi(south.substr(0, south.length()));
+	westI = stoi(west.substr(0, west.length()));
+
+	tree.defineRegion(northI, eastI, southI, westI);
+	logger.queueLines(vector<string>{
+		logger.getLineBreak(),
+		"World boundaries are set to:",
+		'\t' + to_string(northI),
+		"    " + to_string(westI) + '\t' + to_string(eastI),
+		'\t' + to_string(southI),
+		logger.getLineBreak()
+	});
+}
+
+string getSystemTime() {
+	auto end = chrono::system_clock::now();
+	time_t end_time = chrono::system_clock::to_time_t(end);
+	return ctime(&end_time);
 }

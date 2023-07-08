@@ -59,7 +59,7 @@ CommandProcessor::CommandProcessor(string fileName) : ReadMessenger(fileName) {}
 void CommandProcessor::updateContent() {
 	ReadMessenger::updateContent();
 	for (string line : content) {
-		if(line.at(0) != '\n' && line.at(0) != ';')
+		if(line.at(0) != '\n')
 			queries.push_back(new Query(line));
 	}
 }

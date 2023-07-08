@@ -41,4 +41,8 @@ public:
 	WriteMessenger(string);
 };
 
+class BufferPool : public BufferPool {
+	void addToBP();
+};
+
 #endif

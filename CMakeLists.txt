@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(SOURCE_FILES GIS.cpp SystemManager.cpp SystemManager.hpp
 CommandProcessor.cpp CommandProcessor.hpp PRQuadTree.cpp PRQuadTree.hpp
 GISRecord.cpp GISRecord.hpp Storage.cpp Storage.hpp HashTable.cpp
-HashTable.hpp DMS.cpp DMS.hpp)
+HashTable.hpp DMS.cpp DMS.hpp Logger.cpp Logger.hpp)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

@@ -7,6 +7,10 @@
 
 using namespace std;
 
+/*
+	HashTable uses elfhash function.
+	Work done by Michael
+*/
 struct KeyValuePair {
 	string key;
 	int offset;

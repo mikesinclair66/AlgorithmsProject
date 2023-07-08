@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.13)
 project(GeographicInformationSystem)
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCE_FILES GIS.cpp SysAdmin.cpp SysAdmin.hpp CommandProcessor.cpp CommandProcessor.hpp PRQuadTree.cpp PRQuadTree.hpp GISRecord.cpp
-GISRecord.hpp Storage.cpp Storage.hpp HashTable.cpp HashTable.hpp)
+set(SOURCE_FILES GIS.cpp SystemManager.cpp SystemManager.hpp
+CommandProcessor.cpp CommandProcessor.hpp PRQuadTree.cpp PRQuadTree.hpp
+GISRecord.cpp GISRecord.hpp Storage.cpp Storage.hpp HashTable.cpp
+HashTable.hpp DMS.cpp DMS.hpp)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

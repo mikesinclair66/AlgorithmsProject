@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 					storage.updateContent();
 					break;
 				case CommandType::QUIT:
-					return;
+					return 0;
 					break;
 				case CommandType::DEBUG:
 
